@@ -1,0 +1,18 @@
+# Python and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Downloaded model weights and caches
+models/
+model_cache/
+.cache/
+hf_cache/
+
+# Local run artifacts
+outputs/
+results/
+*.log
+.streamlit/secrets.toml
