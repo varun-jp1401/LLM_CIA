@@ -16,3 +16,4 @@ outputs/
 results/
 *.log
 .streamlit/secrets.toml
+data/

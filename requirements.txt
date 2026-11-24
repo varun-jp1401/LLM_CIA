@@ -3,3 +3,13 @@ transformers>=4.51.0
 accelerate
 streamlit
 sentencepiece
+# Semantic retrieval
+faiss-cpu
+sentence-transformers
+# Evaluation & data
+scikit-learn
+datasets
+pandas
+# Fine-tuning
+peft
+trl
