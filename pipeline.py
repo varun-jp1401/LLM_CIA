@@ -14,13 +14,24 @@ def _sentences(text: str) -> list[str]:
 
 
 class MedicalPipeline:
-    def __init__(self):
+    def __init__(self, adapter_path: str | None = None):
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
         self.torch = torch
         self.tokenizer = AutoTokenizer.from_pretrained(MODEL, local_files_only=True)
         dtype = torch.float16 if torch.cuda.is_available() else torch.float32
         self.model = AutoModelForCausalLM.from_pretrained(MODEL, dtype=dtype, device_map="auto", local_files_only=True)
+
+        # Optionally load a LoRA adapter (fine-tuned model)
+        if adapter_path and Path(adapter_path).exists():
+            try:
+                from peft import PeftModel
+                self.model = PeftModel.from_pretrained(self.model, adapter_path)
+                self.model.eval()
+                print(f"[pipeline] LoRA adapter loaded from {adapter_path}")
+            except Exception as e:
+                print(f"[pipeline] Warning: could not load adapter ({e}). Using base model.")
+
         from transformers import AutoModelForSequenceClassification
         self.nli_tokenizer = AutoTokenizer.from_pretrained("cross-encoder/nli-deberta-v3-small", local_files_only=True)
         self.nli_model = AutoModelForSequenceClassification.from_pretrained(
@@ -124,23 +135,38 @@ class MedicalPipeline:
                 candidates.append((lexical, chunk, item["source"]))
         # NLI on short, relevant answer sentences avoids truncating the evidence behind long question lists.
         candidates = sorted(candidates, reverse=True)[:12]
-        best = {"label": "neutral", "confidence": 0.0, "entailment_score": 0.0}
-        entail_idx = next((i for i, label in labels.items() if label == "entailment"), 1)
-        for _, premise, source in candidates:
-            batch = self.nli_tokenizer(premise, claim, truncation=True, max_length=384, return_tensors="pt")
-            batch = {k:v.to(self.nli_model.device) for k,v in batch.items()}
-            with self.torch.inference_mode():
-                probs = self.torch.softmax(self.nli_model(**batch).logits[0], dim=-1)
-            idx = int(probs.argmax())
-            entailment_score = float(probs[entail_idx])
-            if entailment_score > best["entailment_score"]:
-                best = {"label": labels.get(idx, "neutral"), "confidence": float(probs[idx]),
-                        "entailment_score": entailment_score, "source": source}
-        return best
+        # Batch all candidate premise-hypothesis pairs in a single forward pass
+        premises = [chunk for _, chunk, _ in candidates]
+        sources = [src for _, _, src in candidates]
+        batch = self.nli_tokenizer(
+            premises,
+            [claim] * len(premises),
+            padding=True,
+            truncation=True,
+            max_length=256,
+            return_tensors="pt",
+        )
+        batch = {k: v.to(self.nli_model.device) for k, v in batch.items()}
+        with self.torch.inference_mode():
+            probs = self.torch.softmax(self.nli_model(**batch).logits, dim=-1)
+        entail_scores = probs[:, entail_idx]
+        best_idx = int(entail_scores.argmax())
+        best_entail = float(entail_scores[best_idx])
+        pred_label_idx = int(probs[best_idx].argmax())
+        return {
+            "label": labels.get(pred_label_idx, "neutral"),
+            "confidence": float(probs[best_idx, pred_label_idx]),
+            "entailment_score": best_entail,
+            "source": sources[best_idx],
+        }
 
-    def run(self, question):
-        draft = self.generate(f"Answer this medical information question cautiously in 3-5 sentences. Say when uncertain.\nQuestion: {question}\nAnswer:")
-        evidence = self.retrieve(question, k=5)
+    def run(self, question, retriever=None, is_qa_choice: bool = False):
+        if is_qa_choice:
+            prompt = f"Answer this biomedical yes/no/maybe question with one word (yes, no, or maybe) followed by a brief explanation.\nQuestion: {question}\nAnswer:"
+        else:
+            prompt = f"Answer this medical information question cautiously in 3-5 sentences. Say when uncertain.\nQuestion: {question}\nAnswer:"
+        draft = self.generate(prompt)
+        evidence = retriever.retrieve(question, k=5) if retriever else self.retrieve(question, k=5)
         claims = []
         for claim in _sentences(draft):
             terms = self._terms(claim)
@@ -155,7 +181,11 @@ class MedicalPipeline:
         # Do not make unsupported treatment/dose edits based on weak lexical matches.
         if flagged and not abstained and not any(c["risk"] == "high" for c in flagged):
             context = "\n\n".join(f"[{i+1}] {d['text'][:650]} (source: {d['source']})" for i,d in enumerate(evidence[:3]))
-            repaired = self.generate(f"Answer cautiously using only the supplied evidence. Do not add facts beyond it. Keep uncertainty clear and cite evidence labels like [1].\nQuestion: {question}\nDraft: {draft}\nEvidence:\n{context}\nRevised answer:", max_new_tokens=180)
+            if is_qa_choice:
+                repair_prompt = f"Using only the evidence below, answer this question with one word (yes, no, or maybe) followed by a brief explanation.\nQuestion: {question}\nDraft: {draft}\nEvidence:\n{context}\nAnswer:"
+            else:
+                repair_prompt = f"Answer cautiously using only the supplied evidence. Do not add facts beyond it. Keep uncertainty clear and cite evidence labels like [1].\nQuestion: {question}\nDraft: {draft}\nEvidence:\n{context}\nRevised answer:"
+            repaired = self.generate(repair_prompt, max_new_tokens=180)
             # Require NLI support for every repaired sentence before showing it.
             revised_claims = _sentences(repaired)
             checks = [self.verify(c, evidence) for c in revised_claims]

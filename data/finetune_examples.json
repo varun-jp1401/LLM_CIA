@@ -1,0 +1,608 @@
+[
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Smoking or being infected with human papillomavirus can increase the risk of oropharyngeal cancer.\nEvidence: Signs and symptoms of extragonadal germ cell tumors include breathing problems and chest pain. Malignant extragonadal germ cell tumors may cause signs and symptoms as they grow into nearby areas. Other conditions may cause the same signs and symptoms. Check with your doctor if you have any of the following:         - Chest pain.    - Breathing problems.    - Cough.    -  Fever.    - Headache.    -",
+    "output": "neutral"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: What causes most stomach ulcers?\nDraft: Stress and spicy food are the primary causes of stomach ulcers.\nEvidence: Most peptic ulcers are caused by Helicobacter pylori bacterial infection or long-term NSAID use (e.g., aspirin, ibuprofen). Stress and spicy food do not directly cause ulcers, though they may worsen symptoms. Treatment targets H. pylori eradication or NSAID cessation.",
+    "output": "Most stomach ulcers are caused by Helicobacter pylori bacterial infection or long-term use of NSAIDs such as aspirin or ibuprofen. Stress and spicy food do not directly cause ulcers, though they may aggravate symptoms. Treatment focuses on eradicating H. pylori with antibiotics or discontinuing NSAIDs."
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: Is depression just a matter of willpower?\nDraft: Depression is a character weakness and can be overcome simply by thinking positively.\nEvidence: Major depressive disorder is a recognized medical condition with biological, psychological, and social contributors, including altered brain chemistry, genetics, and life events. It often requires professional treatment including psychotherapy, medication, or both. Willpower alone is not sufficient treatment.",
+    "output": "Depression is not a matter of willpower or character weakness. It is a recognized medical condition with complex biological, psychological, and social factors, including alterations in brain chemistry and genetics. Effective treatment typically includes psychotherapy, medication, or a combination, and professional support is important for recovery."
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: What are the warning signs of a stroke?\nDraft: A stroke usually causes a gradual headache over several days and is not a medical emergency.\nEvidence: Stroke warning signs appear suddenly and include sudden numbness or weakness in the face, arm, or leg (especially on one side), sudden confusion or trouble speaking, sudden vision problems, sudden severe headache with no known cause, and sudden trouble walking. The FAST acronym (Face drooping, Arm weakness, Speech difficulty, Time to call 911) is widely recommended.",
+    "output": "Stroke symptoms appear suddenly and are a medical emergency. Warning signs include sudden numbness or weakness (especially on one side of the body), sudden confusion or difficulty speaking, sudden vision problems, sudden severe headache, and sudden trouble walking. Use the FAST acronym — Face drooping, Arm weakness, Speech difficulty, Time to call 911 — and seek emergency care immediately."
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: Is it safe to stop blood pressure medication once blood pressure normalizes?\nDraft: Once your blood pressure is normal, you can safely stop taking your medication.\nEvidence: Antihypertensive medications control but do not cure high blood pressure. Blood pressure typically returns to elevated levels when medication is stopped. Stopping medication without medical guidance can cause rebound hypertension and increase risk of heart attack and stroke.",
+    "output": "Blood pressure medications control hypertension but do not cure it. If medication is stopped, blood pressure typically rises again. Stopping antihypertensive medication without medical guidance can cause rebound hypertension and significantly increase the risk of heart attack and stroke. Any changes to medication should be discussed with your doctor."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: What are the signs and symptoms of Alpha-1 antitrypsin deficiency?\nEvidence: Aicardi-Goutieres syndrome is an inherited condition that mainly affects the brain, immune system, and skin. It is characterized by early-onset severe brain dysfunction (encephalopathy) that usually results in severe intellectual and physical disability. Additional symptoms may include epilepsy, painful, itchy skin lesion (chilblains), vision problems, and joint stiffness. Symptoms usually progres",
+    "output": "neutral"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Is genetic testing available for atypical hemolytic-uremic syndrome?\nEvidence: Key Points\n                    - After childhood soft tissue sarcoma has been diagnosed, tests are done to find out if cancer cells have spread to other parts of the body.     - There are three ways that cancer spreads in the body.    - Cancer may spread from where it began to other parts of the body.\n                \n                \n                    After childhood soft tissue sarcoma has bee",
+    "output": "neutral"
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: You can delay seeking care for chest pain to see if it resolves on its own.\nEvidence: [none]",
+    "output": "I can't verify this potentially life-threatening claim. Chest pain can indicate a heart attack or other serious condition requiring immediate medical attention. Please call 911 or go to an emergency department without delay."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: New types of treatment are being tested in clinical trials.\nEvidence: Use of tobacco products and heavy drinking can affect the risk of developing hypopharyngeal cancer. Anything that increases your risk of getting a disease is called a risk factor. Having a risk factor does not mean that you will get cancer; not having risk factors doesn't mean that you will not get cancer. Talk with your doctor if you think you may be at risk. Risk factors include the following:  ",
+    "output": "neutral"
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: Stopping antidepressants suddenly is safe once you feel better.\nEvidence: [none]",
+    "output": "I can't verify this high-risk claim. Abruptly stopping antidepressants can cause discontinuation syndrome and may lead to relapse of depression. Please work with your prescribing doctor to taper medication safely."
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: It is safe to self-administer intravenous fluids at home without medical supervision.\nEvidence: [none]",
+    "output": "I can't verify this high-risk claim. Intravenous administration requires sterile technique and medical supervision; errors can cause infection, air embolism, or electrolyte imbalances. Please seek care through appropriate medical channels."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Do patients with rheumatoid arthritis established on methotrexate and folic acid 5 mg daily need to continue folic acid supplements long term?\nEvidence: It is postulated that some aspects of methotrexate toxicity may be related to its action as an anti-folate. Folic acid (FA) is often given as an adjunct to methotrexate therapy, but there is no conclusive proof that it decreases the toxicity of methotrexate and there is a theoretical risk that it may decrease the efficacy of methotrexate. To look at the effect of stopping FA supplementation in UK rheumatoid arthritis (RA) patients established on methotrexate<20 mg weekly and FA 5 mg daily, to report all toxicity (including absolute changes in haematological and liver enzyme indices) and to rep",
+    "output": "entailment"
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: You should take aspirin every day to prevent a heart attack even if your doctor has not recommended it.\nEvidence: [none]",
+    "output": "I can't verify this claim for your specific situation. Daily aspirin can cause serious bleeding risks and is only appropriate for certain patients. Please consult your doctor before starting daily aspirin therapy."
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: You can safely diagnose your own skin condition and treat it at home.\nEvidence: [none]",
+    "output": "I can't verify this claim. Skin conditions can range from minor to serious, including melanoma. Self-diagnosis may delay treatment of significant conditions. Please consult a dermatologist for proper evaluation."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Use of tobacco products and drinking too much alcohol can affect the risk of laryngeal cancer.Anything that increases your risk of getting a disease is called a risk factor.\nEvidence: Key Points\n                    - Adult primary liver cancer is a disease in which malignant (cancer) cells form in the tissues of the liver.    - There are two types of adult primary liver cancer.    - Having hepatitis or cirrhosis can affect the risk of adult primary liver cancer.     - Signs and symptoms of adult primary liver cancer include a lump or pain on the right side.     - Tests that exa",
+    "output": "neutral"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Signs of lip and oral cavity cancer include a sore or lump on the lips or in the mouth.\nEvidence: Signs of lip and oral cavity cancer include a sore or lump on the lips or in the mouth. These and other signs and symptoms may be caused by lip and oral cavity cancer or by other conditions. Check with your doctor if you have any of the following:          - A sore on the lip or in the mouth that does not heal.    - A lump or thickening on the lips or gums or in the mouth.    - A white or red patch on the gums, tongue, or lining of the mouth.    - Bleeding, pain, or numbness in the lip or mouth.",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Is there any relationship between streptococcal infection and multiple sclerosis?\nEvidence: Multiple sclerosis (MS) is an immune-mediated inflammatory demyelinating disease of uncertain etiology. Although the mechanisms of inducting autoimmunity by some of the infectious agents have been investigated, there is not yet enough research on streptococcal infections.MATERIAL/ To understand the effect of past group A streptococcal infection on MS, antistreptolysin O (ASO) and antideoxyribonuclease B (ADNase B) were measured in 21 patients with relapsing-remitting MS and 21 healthy blood donors by nephelometric assay. ADNase B levels in the patients with MS were found to be significantly hi",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: What are the signs and symptoms of Alveolar capillary dysplasia?\nEvidence: What are the signs and symptoms of Alveolar capillary dysplasia? The Human Phenotype Ontology provides the following list of signs and symptoms for Alveolar capillary dysplasia. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Pulmonary hypertension 90% Respirator",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Different factors increase or decrease the risk of breast cancer.\nEvidence: Different factors increase or decrease the risk of breast cancer. Anything that increases your chance of getting a disease is called a risk factor. Anything that decreases your chance of getting a disease is called a protective factor.    For information about risk factors and protective factors for breast cancer, see the PDQ summary on Breast Cancer Prevention.",
+    "output": "entailment"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: What are the symptoms of Adolescent idiopathic scoliosis ?\nDraft: It is a well-known fact that what are the symptoms of adolescent idiopathic scoliosis? This is completely safe for all patients regardless of other health conditions.\nEvidence: What are the symptoms of adolescent idiopathic scoliosis? Adolescent idiopathic scoliosis is characterized by an abnormal curvature of the spine (usually in an elongated \"S\" or \"C\" shape), along with twisted or rotated bones of the spine. Mild scoliosis generally does not cause pain, problems with movement, or difficulty breathing. It may only be diagnosed if it is noticed during a regular physical examination or a scoliosis screening at school. The most common signs of the condition include a t",
+    "output": "What are the symptoms of adolescent idiopathic scoliosis? Adolescent idiopathic scoliosis is characterized by an abnormal curvature of the spine (usually in an elongated \"S\" or \"C\" shape), along with twisted or rotated bones of the spine."
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: You should stop taking your blood pressure medication if you feel dizzy.\nEvidence: [none]",
+    "output": "I can't verify this potentially high-risk medication claim. Stopping blood pressure medication suddenly can cause dangerous rebound hypertension. Please consult your prescribing physician before changing your medication."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Key Points\n                    - Metastatic squamous neck cancer with occult primary is a disease in which squamous cell cancer spreads to lymph nodes in the neck and it is not known where the cancer first formed in the body.\nEvidence: Key Points\n                    - Metastatic squamous neck cancer with occult primary is a disease in which squamous cell cancer spreads to lymph nodes in the neck and it is not known where the cancer first formed in the body.    - Signs and symptoms of metastatic squamous neck cancer with occult primary include a lump or pain in the neck or throat.     - Tests that examine the tissues of the neck, respiratory tract, and upper part of the digestive tract are used to detect (find) and diagnose met",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Assessment of carotid artery stenosis before coronary artery bypass surgery. Is it always necessary?\nEvidence: Extracranial internal carotid artery stenosis is a risk factor for perioperative stroke in patients undergoing coronary artery bypass surgery (CAB). Although selective and non-selective methods of preoperative carotid screening have been advocated, it remains unclear if this screening is clinically relevant.AIM: To test whether selective carotid screening is as effective as non-selective screening in detecting significant carotid disease. The case records of patients consecutively undergoing CAB were reviewed. Patients were stratified retrospectively into high- or low-risk groups according to ",
+    "output": "contradiction"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Certain factors affect prognosis (chance of recovery) and treatment options.\nEvidence: Certain factors affect prognosis (chance of recovery) and treatment options. The prognosis (chance of recovery) and treatment options depend on the following:         - Whether the cancer is in the upper or lower part of the bile duct system.     - The stage of the cancer (whether it affects only the bile ducts or has spread to the liver, lymph nodes, or other places in the body).    - Whether the cancer has spread to nearby nerves or veins.    - Whether the cancer can be completely removed by s",
+    "output": "entailment"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: What is (are) Kaposi Sarcoma ?\nDraft: Research has proven beyond doubt that key points\n                    - kaposi sarcoma is a disease in which malignant tumors (cancer) can form in the skin, mucous membranes, lymph nodes, and other organs. No further treatment or monitoring is needed.\nEvidence: Key Points\n                    - Kaposi sarcoma is a disease in which malignant tumors (cancer) can form in the skin, mucous membranes, lymph nodes, and other organs.    - Tests that examine the skin, lungs, and gastrointestinal tract are used to detect (find) and diagnose Kaposi sarcoma.    - After Kaposi sarcoma has been diagnosed, tests are done to find out if cancer cells have spread to other parts of the body.    - Certain factors affect prognosis (chance of recovery) and treatment options.",
+    "output": "Key Points\n                    - Kaposi sarcoma is a disease in which malignant tumors (cancer) can form in the skin, mucous membranes, lymph nodes, and other organs. - Tests that examine the skin, lungs, and gastrointestinal tract are used to detect (find) and diagnose Kaposi sarcoma."
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: How to diagnose Achondrogenesis ?\nDraft: Studies have conclusively shown that is genetic testing is available for achondrogenesis? No further treatment or monitoring is needed.\nEvidence: Is genetic testing is available for achondrogenesis? Genetic testing can help distinguish between the different types of achondrogenesis. GeneTests lists the names of laboratories that are performing genetic testing for achondrogenesis type 1B and type 2. Please note: Most of the laboratories listed through GeneTests do not accept direct contact from patients and their families; therefore, if you are interested in learning more, you will need to work with a health care provider or a genetics pro",
+    "output": "Is genetic testing is available for achondrogenesis? Genetic testing can help distinguish between the different types of achondrogenesis."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Is zero central line-associated bloodstream infection rate sustainable?\nEvidence: Adoption and implementation of evidence-based measures for catheter care leads to reductions in central line-associated bloodstream infection (CLABSI) rates in the NICU. The purpose of this study is to evaluate whether this rate reduction is sustainable for at least 1 year and to identify key determinants of this sustainability at the NICU of the Floating Hospital for Children at Tufts Medical Center. We reviewed the incidence of CLABSIs in the NICU temporally to the implementation of new practice policies and procedures, from July 2008 to December 2013. Adoption of standardized care practices",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Women with an increased risk of ovarian cancer may consider surgery to lessen the risk.\nEvidence: Certain factors affect treatment options and prognosis (chance of recovery). Treatment options depend on:         - The stage of the disease.    - Red blood cell, white blood cell, and platelet blood counts.    - Whether there are signs or symptoms, such as fever, chills, or weight loss.    - Whether the liver, spleen, or lymph nodes are larger than normal.    - The response to initial treatment. ",
+    "output": "neutral"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Cardiovascular risk in a rural adult West African population: is resting heart rate also relevant?\nEvidence: Elevated resting heart rate (RHR) is a neglected marker in cardiovascular risk factor studies of sub-Saharan African populations. This study aimed to determine the prevalence of elevated RHR and other risk factors for cardiovascular disease (CVD) and to investigate any associations between RHR and these risk factors in a rural population in Ghana. Cross-sectional analysis. A total of 574 adults aged between 18-65 years were randomly sampled from a population register. Data collected included those on sociodemographic variables and anthropometric, blood pressure (BP), and RHR measurements. With",
+    "output": "entailment"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: What are the symptoms of Alpha-thalassemia ?\nDraft: Research has proven beyond doubt that what are the signs and symptoms of alpha-thalassemia? This is completely safe for all patients regardless of other health conditions.\nEvidence: What are the signs and symptoms of Alpha-thalassemia? The Human Phenotype Ontology provides the following list of signs and symptoms for Alpha-thalassemia. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Abnormality of the heme biosynthetic pathway 90% Abnormalit",
+    "output": "What are the signs and symptoms of Alpha-thalassemia? The Human Phenotype Ontology provides the following list of signs and symptoms for Alpha-thalassemia."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Certain factors affect prognosis (chance of recovery) and treatment options for essential thrombocythemia.\nEvidence: Certain factors affect prognosis (chance of recovery) and treatment options for essential thrombocythemia. Prognosis (chance of recovery) and treatment options depend on the following:         - The age of the patient.    - Whether the patient has signs or symptoms or other problems related to essential thrombocythemia.",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Aspergillosis is an infection, growth, or allergic response caused by the Aspergillus fungus.\nEvidence: Ethnic background and being exposed to the Epstein-Barr virus can affect the risk of nasopharyngeal cancer. Anything that increases your risk of getting a disease is called a risk factor. Having a risk factor does not mean that you will get cancer; not having risk factors doesn't mean that you will not get cancer. Talk with your doctor if you think you may be at risk. Risk factors for nasopharynge",
+    "output": "neutral"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Three-dimensional ultrasound-validated large-core needle biopsy: is it a reliable method for the histological assessment of breast lesions?\nEvidence: The use of three-dimensional (3D) ultrasound may help to determine the exact position of the needle during breast biopsy, thereby reducing the number of core samples that are needed to achieve a reliable histological diagnosis. The aim of this study was to demonstrate the efficacy of 3D ultrasound-validated large-core needle biopsy (LCNB) of the breast. A total of 360 core needle biopsies was obtained from 169 breast lesions in 146 patients. Additional open breast biopsy was performed in 111 women (127/169 breast lesions); the remaining 42 lesions were followed up for at least 24 months. 3D ul",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: New types of treatment are being tested in clinical trials.\nEvidence: New types of treatment are being tested in clinical trials.\n                    This summary section describes treatments that are being studied in clinical trials. It may not mention every new treatment being studied. Information about clinical trials is available from the NCI website.     Biologic therapy     Biologic therapy is a treatment that uses the patients immune system to fight cancer. Substances made by the body or made in a laboratory are used to boost, direct, or restore the bodys n",
+    "output": "entailment"
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: Stopping chemotherapy early once you feel better will not affect your cancer treatment.\nEvidence: [none]",
+    "output": "I can't verify this high-risk medical claim. Stopping chemotherapy prematurely may allow cancer cells to regrow and reduce treatment effectiveness. Please discuss any concerns about your treatment with your oncologist."
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: Stopping seizure medication on your own when seizures stop is safe.\nEvidence: [none]",
+    "output": "I can't verify this high-risk claim. Stopping antiepileptic drugs without medical guidance can trigger breakthrough seizures that may be life-threatening. Please consult your neurologist before changing your seizure medications."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Pulmonary valve replacement in adults late after repair of tetralogy of fallot: are we operating too late?\nEvidence: The purpose of this study is to evaluate right ventricular (RV) volume and function after pulmonary valve replacement (PVR) and to address the issue of optimal surgical timing in these patients. Chronic pulmonary regurgitation (PR) following repair of tetralogy of Fallot (TOF) leads to RV dilation and an increased incidence of sudden cardiac death in adult patients. We studied 25 consecutive adult patients who underwent PVR for significant PR late after repair of TOF. Radionuclide angiography was performed in all at a mean of 8.2 months (+/- 8 months) before PVR and repeated at a mean of 28.0 ",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: What are the signs and symptoms of Bardet-Biedl syndrome 11?\nEvidence: What are the signs and symptoms of Bardet-Biedl syndrome 11? The Human Phenotype Ontology provides the following list of signs and symptoms for Bardet-Biedl syndrome 11. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Abnormality of the kidney 95% Abnormal electr",
+    "output": "entailment"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: Does exercise help with anxiety?\nDraft: Exercise has no effect on anxiety and people with anxiety should rest instead.\nEvidence: Regular physical exercise has been shown to reduce symptoms of anxiety and depression. Aerobic exercise in particular can reduce stress hormones, improve mood, and serve as an effective complementary treatment for anxiety disorders alongside therapy and medication.",
+    "output": "Regular physical exercise has well-documented benefits for anxiety. Aerobic exercise in particular can reduce stress hormones, improve mood, and serve as an effective complementary treatment alongside therapy and medication. Rest alone is not the recommended approach for managing anxiety."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Key Points\n                    - Chronic lymphocytic leukemia is a type of cancer in which the bone marrow makes too many lymphocytes (a type of white blood cell).\nEvidence: Sometimes breast cancer occurs in women who are pregnant or have just given birth. Breast cancer occurs about once in every 3,000 pregnancies. It occurs most often between the ages of 32 and 38.",
+    "output": "neutral"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: What are the signs and symptoms of Basilar migraine?\nEvidence: Key Points\n                    - Childhood extracranial germ cell tumors form from germ cells in parts of the body other than the brain.    - Childhood extracranial germ cell tumors may be benign or malignant.    - There are three types of extracranial germ cell tumors.         - Mature Teratomas      - Immature Teratomas      - Malignant Germ Cell Tumors        - Childhood extracranial germ cell ",
+    "output": "neutral"
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: Using someone else's insulin as a temporary measure is acceptable.\nEvidence: [none]",
+    "output": "I can't verify this high-risk claim. Using another person's insulin without medical supervision is dangerous; insulin types and doses are highly individual. Please contact your doctor or go to an emergency department if you cannot access your prescribed insulin."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Do patients with localized prostate cancer treatment really want more aggressive treatment?\nEvidence: Examine whether patients with prostate cancer choose the more aggressive of two radiotherapeutic options, whether this choice is reasoned, and what the determinants of the choice are. One hundred fifty patients with primary prostate cancer (T(1-3)N(0)M(0)) were informed by means of a decision aid of two treatment options: radiotherapy with 70 Gy versus 74 Gy. The latter treatment is associated with more cure and more toxicity. The patients were asked whether they wanted to choose, and if so which treatment they preferred. They also assigned importance weights to the probability of various outc",
+    "output": "contradiction"
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: Children can safely take adult dosages of over-the-counter medications.\nEvidence: [none]",
+    "output": "I can't verify this potentially dangerous claim. Adult dosages can be harmful or fatal for children due to differences in body weight and metabolism. Always use pediatric formulations and dosages, and consult a paediatrician if unsure."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Key Points\n                    - There are different types of treatment for patients with plasma cell neoplasms.\nEvidence: Tests that examine the lungs are used to detect (find), diagnose, and stage non-small cell lung cancer. Tests and procedures to detect, diagnose, and stage non-small cell lung cancer are often done at the same time. Some of the following tests and procedures may be used:         -   Physical exam and history : An exam of the body to check general signs of health, including checking for signs of di",
+    "output": "neutral"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: What are the treatments for Alpha-thalassemia ?\nDraft: Studies have conclusively shown that treatment of alpha-thalassemia often includes blood transfusions to provide healthy blood cells that have normal hemoglobin. This is completely safe for all patients regardless of other health conditions.\nEvidence: How might alpha-thalassemia be treated? Treatment of alpha-thalassemia often includes blood transfusions to provide healthy blood cells that have normal hemoglobin.  Bone marrow transplant has helped to cure a small number of individuals with severe alpha-thalassemia.",
+    "output": "Treatment of alpha-thalassemia often includes blood transfusions to provide healthy blood cells that have normal hemoglobin. Bone marrow transplant has helped to cure a small number of individuals with severe alpha-thalassemia."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Aicardi-Goutieres syndrome is an inherited condition that mainly affects the brain, immune system, and skin.\nEvidence: Aicardi-Goutieres syndrome is an inherited condition that mainly affects the brain, immune system, and skin. It is characterized by early-onset severe brain dysfunction (encephalopathy) that usually results in severe intellectual and physical disability. Additional symptoms may include epilepsy, painful, itchy skin lesion (chilblains), vision problems, and joint stiffness. Symptoms usually progress over several months before the disease course stabilizes. There are six different types of Aicardi",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Key Points\n                    - There are different types of treatment for patients with laryngeal cancer.\nEvidence: Key Points\n                    - There are different types of treatment for patients with laryngeal cancer.     - Three types of standard treatment are used:         - Radiation therapy      - Surgery     - Chemotherapy         - New types of treatment are being tested in clinical trials.          - Chemoprevention     - Radiosensitizers        - Patients may want to think about taking part in a clinical trial.    - Patients can enter clinical trials before, during, or after starting their cance",
+    "output": "entailment"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: What are the symptoms of Childhood Craniopharyngioma ?\nDraft: Medical consensus is that signs of childhood craniopharyngioma include vision changes and slow growth. This is completely safe for all patients regardless of other health conditions.\nEvidence: Signs of childhood craniopharyngioma include vision changes and slow growth. These and other signs and symptoms may be caused by craniopharyngiomas or by other conditions. Check with your childs doctor if your child has any of the following:         - Headaches, including morning headache or headache that goes away after vomiting.    - Vision changes.    -  Nausea and vomiting.    - Loss of balance or trouble walking.    - Increase in thirst or urination.    - Unusual sleepiness or change in ene",
+    "output": "Signs of childhood craniopharyngioma include vision changes and slow growth. These and other signs and symptoms may be caused by craniopharyngiomas or by other conditions."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: What are the signs and symptoms of Asthma?\nEvidence: What are the signs and symptoms of Acrocapitofemoral dysplasia? The Human Phenotype Ontology provides the following list of signs and symptoms for Acrocapitofemoral dysplasia. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs ",
+    "output": "neutral"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Key Points\n                    - Childhood ependymoma is a disease in which malignant (cancer) cells form in the tissues of the brain and spinal cord.\nEvidence: Key Points\n                    - Childhood ependymoma is a disease in which malignant (cancer) cells form in the tissues of the brain and spinal cord.    - There are different types of ependymomas.    - The part of the brain that is affected depends on where the ependymoma forms.    - The cause of most childhood brain tumors is unknown.    - The signs and symptoms of childhood ependymoma are not the same in every child.    - Tests that examine the brain and spinal cord are used to detect (find) ",
+    "output": "entailment"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: Does high blood pressure always cause symptoms?\nDraft: High blood pressure always causes headaches, dizziness, and nosebleeds, making it easy to detect.\nEvidence: Hypertension is known as the 'silent killer' because it usually produces no symptoms until serious complications such as heart attack, stroke, or kidney disease occur. Regular blood pressure monitoring is essential for early detection.",
+    "output": "High blood pressure usually causes no symptoms, which is why it is called the 'silent killer.' Symptoms such as headaches and dizziness are not reliable indicators and may appear only when complications arise. Regular blood pressure checks are essential for early detection and prevention of complications like heart attack and stroke."
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: How to diagnose Paranasal Sinus and Nasal Cavity Cancer ?\nDraft: It is a well-known fact that tests that examine the sinuses and nasal cavity are used to detect (find) and diagnose paranasal sinus and nasal cavity cancer. No further treatment or monitoring is needed.\nEvidence: Tests that examine the sinuses and nasal cavity are used to detect (find) and diagnose paranasal sinus and nasal cavity cancer. The following tests and procedures may be used:         -   Physical exam and history : An exam of the body to check general signs of health, including checking for signs of disease, such as lumps or anything else that seems unusual. A history of the patients health habits and past illnesses and treatments will also be taken.    -  Physical exam of the nose, face, and n",
+    "output": "Tests that examine the sinuses and nasal cavity are used to detect (find) and diagnose paranasal sinus and nasal cavity cancer. The following tests and procedures may be used:         -   Physical exam and history : An exam of the body to check general signs of health, including checking for signs of disease, such as lumps or anything else that seems unusual."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Can predilatation in transcatheter aortic valve implantation be omitted?\nEvidence: The use of a balloon expandable stent valve includes balloon predilatation of the aortic stenosis before valve deployment. The aim of the study was to see whether or not balloon predilatation is necessary in transcatheter aortic valve replacement (TAVI). Sixty consecutive TAVI patients were randomized to the standard procedure or to a protocol where balloon predilatation was omitted. There were no significant differences between the groups regarding early hemodynamic results or complication rates.",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Key Points\n                    - After testicular cancer has been diagnosed, tests are done to find out if cancer cells have spread within the testicles or to other parts of the body.\nEvidence: Key Points\n                    - After testicular cancer has been diagnosed, tests are done to find out if cancer cells have spread within the testicles or to other parts of the body.     - There are three ways that cancer spreads in the body.    - Cancer may spread from where it began to other parts of the body.    - The following stages are used for testicular cancer:         - Stage 0 (Testicular Intraepithelial Neoplasia)     - Stage I     - Stage II     - Stage III\n                \n        ",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Signs and symptoms of pancreatic cancer include jaundice, pain, and weight loss.\nEvidence: Signs and symptoms of pancreatic cancer include jaundice, pain, and weight loss. \n\t                    Pancreatic cancer may not cause early signs or symptoms. Signs and symptoms may be caused by pancreatic cancer or by other conditions. Check with your doctor if you have any of the following:         -  Jaundice (yellowing of the skin and whites of the eyes).    - Light-colored stools.    - Dark urine.    - Pain in the upper or middle abdomen and back.     - Weight loss for no known reason.    ",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Are increased carotid artery pulsatility and resistance indexes early signs of vascular abnormalities in young obese males?\nEvidence: To provide insight into the factors by which obesity in itself may directly lead to early arterial damage, we aimed to determine early sonographic markers of obesity-related vascular dysfunction in young obese males. Thirty-five young obese males and 23 age-matched healthy male volunteers were recruited into the study. Common carotid artery pulsatility index and resistance index were calculated from blood flow velocities curves obtained by pulsed Doppler ultrasonography. The mean pulsatility index, resistance index, body mass index, waist circumference, systolic and diastolic blood pressure, h",
+    "output": "entailment"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: What is the best way to treat a broken bone at home?\nDraft: Most broken bones can be treated at home with ice and rest without needing a doctor.\nEvidence: Fractures require medical evaluation to confirm diagnosis via X-ray and to determine appropriate treatment, which may include casting, splinting, or surgery for complex breaks. Delayed treatment can lead to improper healing. Home management without diagnosis is inappropriate.",
+    "output": "Broken bones require prompt medical evaluation, including X-ray imaging, to confirm the fracture and determine treatment. Treatment may range from casting or splinting to surgery for complex fractures. Home management without proper diagnosis is inappropriate and can lead to improper healing or complications."
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: You can safely share your prescription medication with someone who has the same symptoms.\nEvidence: [none]",
+    "output": "I can't verify this claim. Sharing prescription medications is dangerous and illegal. Medications are prescribed based on individual health factors; what is safe for one person may be harmful for another. Please consult a healthcare professional."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Transesophageal echocardiographic assessment of left ventricular function in brain-dead patients: are marginally acceptable hearts suitable for transplantation?\nEvidence: The brain-dead donor supply has become one of the criteria limiting the performance of heart transplantation. Conventional screening criteria are too limiting and exclude suitable heart donors. Echocardiography is now widely available and is a reliable tool to assess left ventricular dysfunction in brain-dead donors. Yet few data are available on the degree of left ventricular dysfunction where a transplantation is possible. Fifty-five potential brain-dead heart donors (age 38 +/- 11 years) were prospectively evaluated by transesophageal echocardiography (TEE) before harvesting. Fractional are",
+    "output": "entailment"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: Is a low-carb diet good for people with kidney disease?\nDraft: A high-protein, low-carbohydrate diet is ideal for all people with kidney disease.\nEvidence: For most patients with chronic kidney disease, a low-protein diet is recommended to reduce the accumulation of nitrogen waste products that the kidneys must filter. High-protein diets can accelerate kidney damage. Dietary management should be individualized by a renal dietitian.",
+    "output": "High-protein diets are generally not appropriate for people with chronic kidney disease. A low-protein diet is typically recommended to reduce the burden of nitrogen waste on the kidneys. High-protein intake can accelerate kidney damage. Dietary plans should be individualized and managed with the guidance of a renal dietitian."
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: It is safe to combine any over-the-counter painkillers for stronger pain relief.\nEvidence: [none]",
+    "output": "I can't verify this claim. Combining painkillers can cause serious harm including gastrointestinal bleeding and liver damage. Please consult a pharmacist or doctor before combining medications."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: What are the signs and symptoms of Autosomal dominant neuronal ceroid lipofuscinosis 4B?\nEvidence: Key Points\n                    - Adult soft tissue sarcoma is a disease in which malignant (cancer) cells form in the soft tissues of the body.    - Having certain inherited disorders can increase the risk of adult soft tissue sarcoma.    - A sign of adult soft tissue sarcoma is a lump or swelling in soft tissue of the body.     - Adult soft tissue sarcoma is diagnosed with a biopsy.     - Certain",
+    "output": "neutral"
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: Herbal supplements are always safe to take alongside prescription medications.\nEvidence: [none]",
+    "output": "I can't verify this claim. Many herbal supplements interact significantly with prescription medications. For example, St. John's Wort reduces the effectiveness of several drugs. Please consult your pharmacist before combining supplements with medications."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: What treatment has been attempted in patients who have aquagenic pruritus?\nEvidence: What treatment has been attempted in patients who have aquagenic pruritus? The underlying cause of aquagenic pruritus is not well understood which complicates the decision about what therapy might be best for treatment. Various options have been tried with varying success. Antihistamines are the mainstay of treatment. Other therapies that have been tried include adding adding sodium bicarbonate to bath water, topical capsaicin, selective serotonin reuptake inhibitors, UVB phototherapy, PUVA ther",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Traumatic aortic injury: does the anatomy of the aortic arch influence aortic trauma severity?\nEvidence: Traumatic aortic injury (TAI) is a rare but life-threatening type of injury. We investigate whether the anatomy of the aortic arch influences the severity of aortic injury. This is a retrospective study of twenty-two cases treated with TEVAR for TAI in our department from 2009 to 2014. Aortic injury was assessed in accordance with the recommendations of the Society of Vascular Surgery. We measured the aortic arch angle and the aortic arch index, based on the initial angio-CT scan, in each of the analyzed cases. The mean aortic arch index and mean aortic arch angle were 6.8 cm and 58.3°, respec",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: What are the signs and symptoms of Autosomal recessive hyper IgE syndrome?\nEvidence: What are the signs and symptoms of Autosomal recessive hyper IgE syndrome? The Human Phenotype Ontology provides the following list of signs and symptoms for Autosomal recessive hyper IgE syndrome. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Asthma 90% Cellul",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Having certain inherited disorders can increase the risk of adult soft tissue sarcoma.\nEvidence: Having certain inherited disorders can increase the risk of adult soft tissue sarcoma. Anything that increases your risk of getting a disease is called a risk factor. Having a risk factor does not mean that you will get cancer; not having risk factors doesn't mean that you will not get cancer. Talk with your doctor if you think you may be at risk. Risk factors for soft tissue sarcoma include the following inherited disorders:         -  Retinoblastoma.    -  Neurofibromatosis type 1 (NF1; von Re",
+    "output": "entailment"
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: You should take corticosteroid cream more liberally than prescribed to speed healing.\nEvidence: [none]",
+    "output": "I can't verify this high-risk medication claim. Overusing topical corticosteroids can cause skin thinning, adrenal suppression, and other serious effects. Please follow your prescribed dosage and consult your doctor if it is not providing sufficient relief."
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: All pain is best treated with the strongest available opioid medication.\nEvidence: [none]",
+    "output": "I can't verify this claim. Opioids carry significant risks including addiction and overdose and are not appropriate for all types of pain. Pain management should be individualized and supervised by a healthcare provider."
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: You can use an old prescription from a previous illness without consulting a doctor.\nEvidence: [none]",
+    "output": "I can't verify this claim for your current situation. Using old prescriptions is risky; your condition may differ, the medication may have expired, or interactions with other medications may exist. Please consult a healthcare provider."
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: How to diagnose Laryngeal Cancer ?\nDraft: Studies have conclusively shown that tests that examine the throat and neck are used to help detect (find), diagnose, and stage laryngeal cancer.the following tests and procedures may be used:         -   physical exam of the throat and neck: an exam to check the throat and neck for abnormal areas. This is completely safe for all patients regardless of other health conditions.\nEvidence: Tests that examine the throat and neck are used to help detect (find), diagnose, and stage laryngeal cancer.The following tests and procedures may be used:         -   Physical exam of the throat and neck: An exam to check the throat and neck for abnormal areas. The doctor will feel the inside of the mouth with a gloved finger and examine the mouth and throat with a small long-handled mirror and light. This will include checking the insides of the cheeks and lips; the gums; the back, roof, and f",
+    "output": "Tests that examine the throat and neck are used to help detect (find), diagnose, and stage laryngeal cancer.The following tests and procedures may be used:         -   Physical exam of the throat and neck: An exam to check the throat and neck for abnormal areas. The doctor will feel the inside of the mouth with a gloved finger and examine the mouth and throat with a small long-handled mirror and light."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: New types of treatment are being tested in clinical trials.\nEvidence: New types of treatment are being tested in clinical trials.\n                    Information about clinical trials is available from the NCI website.\n                \n                \n                    Patients may want to think about taking part in a clinical trial.\n                    For some patients, taking part in a clinical trial may be the best treatment choice. Clinical trials are part of the cancer research process. Clinical trials are done to find out if new cancer treatments are saf",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Key Points\n                    - Gastrointestinal stromal tumor is a disease in which abnormal cells form in the tissues of the gastrointestinal tract.\nEvidence: Key Points\n                    - Gastrointestinal stromal tumor is a disease in which abnormal cells form in the tissues of the gastrointestinal tract.    - Genetic factors can increase the risk of having a gastrointestinal stromal tumor.     - Signs of gastrointestinal stromal tumors include blood in the stool or vomit.    - Tests that examine the GI tract are used to detect (find) and diagnose gastrointestinal stromal tumors.    - Very small GISTs are common.    - Certain factors affect progno",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Key Points\n                    - There are different types of treatment for patients with central nervous system atypical teratoid/rhabdoid tumor.\nEvidence: Key Points\n                    - There are different types of treatment for patients with central nervous system atypical teratoid/rhabdoid tumor.    - Children with atypical teratoid/rhabdoid tumor should have their treatment planned by a team of health care providers who are experts in treating cancer in children.     - Childhood brain tumors may cause signs or symptoms that begin before the cancer is diagnosed and continue for months or years.    - Some cancer treatments cause side effects mo",
+    "output": "entailment"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: Is it safe to take ibuprofen during pregnancy?\nDraft: Ibuprofen is a safe and effective pain reliever throughout pregnancy.\nEvidence: NSAIDs including ibuprofen are generally contraindicated in pregnancy, especially in the third trimester, due to risks of premature closure of the ductus arteriosus, fetal renal impairment, and reduced amniotic fluid. Paracetamol (acetaminophen) is preferred for pain relief during pregnancy.",
+    "output": "Ibuprofen is not safe during pregnancy. NSAIDs including ibuprofen are contraindicated, especially in the third trimester, due to risks of premature closure of the ductus arteriosus, fetal kidney problems, and reduced amniotic fluid. Paracetamol (acetaminophen) is the recommended alternative for pain relief during pregnancy."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: What are the signs and symptoms of Agenesis of the dorsal pancreas?\nEvidence: What are the signs and symptoms of Agenesis of the dorsal pancreas? The Human Phenotype Ontology provides the following list of signs and symptoms for Agenesis of the dorsal pancreas. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for these medical terms. Signs and Symptoms Approximate number of patients (when available) Abnormality of the pancreas 90%",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Body perception: do parents, their children, and their children's physicians perceive body image differently?\nEvidence: To compare children's, parents' and physicians' perceptions of children's body size. We administered a structured questionnaire of body size perception using a descriptive Likert scale keyed to body image figures to children ages 12 to 18 years. The same scale was given to parents of children ages 5 to 18 years. The sample consisted of 91 children and their parents being seen in the Pediatric Gastroenterology Clinic for concerns unrelated to overweight. Weight and height of the children were measured, and body mass index (BMI) was calculated. The children's BMI percentiles were categorized as ",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: How might agenesis of the dorsal pancreas be treated?\nEvidence: What are the signs and symptoms of Acromegaloid facial appearance syndrome? The Human Phenotype Ontology provides the following list of signs and symptoms for Acromegaloid facial appearance syndrome. If the information is available, the table below includes how often the symptom is seen in people with this condition. You can use the MedlinePlus Medical Dictionary to look up the definitions for the",
+    "output": "neutral"
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: Taking a double dose of insulin will help control high blood sugar faster.\nEvidence: [none]",
+    "output": "I can't verify this high-risk medication claim. Doubling insulin doses without medical guidance can cause life-threatening hypoglycaemia. Please contact your diabetes care team immediately if your blood sugar is uncontrolled."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: The Deformity Angular Ratio: Does It Correlate With High-Risk Cases for Potential Spinal Cord Monitoring Alerts in Pediatric 3-Column Thoracic Spinal Deformity Corrective Surgery?\nEvidence: A retrospective analysis. The purpose of this study was to determine whether the deformity angular ratio (DAR) can reliably assess the neurological risks of patients undergoing deformity correction. Identifying high-risk patients and procedures can help ensure that appropriate measures are taken to minimize neurological complications during spinal deformity corrections. Subjectively, surgeons look at radiographs and evaluate the riskiness of the procedure. However, 2 curves of similar magnitude and location can have significantly different risks of neurological deficit during surgery. Whether ",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Do nomograms designed to predict biochemical recurrence (BCR) do a better job of predicting more clinically relevant prostate cancer outcomes than BCR?\nEvidence: To examine the ability of various postoperative nomograms to predict prostate cancer-specific mortality (PCSM) and to validate that they could predict aggressive biochemical recurrence (BCR). Prostate-specific antigen (PSA), grade, and stage are the classic triad used to predict BCR after radical prostatectomy (RP). Multiple nomograms use these to predict risk of BCR. A previous study showed that several nomograms could predict aggressive BCR (prostate-specific antigen doubling time [PSADT] <9 months) more accurately than BCR. However, it remains unknown if they can predict more definitive end",
+    "output": "entailment"
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: You can treat a severe allergic reaction at home with antihistamines alone.\nEvidence: [none]",
+    "output": "I can't verify this high-risk claim. Severe allergic reactions (anaphylaxis) require immediate epinephrine injection and emergency medical care. Antihistamines are not sufficient for anaphylaxis. Call emergency services immediately."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Does the clinical presentation of a prior preterm birth predict risk in a subsequent pregnancy?\nEvidence: The objective of the study was to determine whether risk of recurrent preterm birth differs based on the clinical presentation of a prior spontaneous preterm birth (SPTB): advanced cervical dilatation (ACD), preterm premature rupture of membranes (PPROM), or preterm labor (PTL). This retrospective cohort study included singleton pregnancies from 2009 to 2014 complicated by a history of prior SPTB. Women were categorized based on the clinical presentation of their prior preterm delivery as having ACD, PPROM, or PTL. Risks for sonographic short cervical length and recurrent SPTB were compared be",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Are acceptance rates of a national preventive home visit programme for older people socially imbalanced?\nEvidence: Preventive home visits are offered to community dwelling older people in Denmark aimed at maintaining their functional ability for as long as possible, but only two thirds of older people accept the offer from the municipalities. The purpose of this study is to investigate 1) whether socioeconomic status was associated with acceptance of preventive home visits among older people and 2) whether municipality invitational procedures for the preventive home visits modified the association. The study population included 1,023 community dwelling 80-year-old individuals from the Danish intervention s",
+    "output": "entailment"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: Can antibiotics treat the flu?\nDraft: Yes, antibiotics are effective and should be taken at the first sign of flu.\nEvidence: Influenza is caused by a virus. Antibiotics treat bacterial infections only and have no effect on viral illnesses such as influenza. Inappropriate antibiotic use contributes to antibiotic resistance. Antiviral medications such as oseltamivir may reduce flu duration if started early.",
+    "output": "Antibiotics are not effective against the flu because influenza is a viral infection, not bacterial. Using antibiotics for viral illnesses is inappropriate and contributes to antibiotic resistance. Antiviral medications such as oseltamivir may shorten flu duration when started within the first 48 hours of symptom onset."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Should pulp chamber pulpotomy be seen as a permanent treatment?\nEvidence: Seventeen patients, aged 7-54 years (mean of 37.2 year), were treated by pulpotomy and filling with ProRoot MTA(®)  in premolar or molar teeth with vital pulps and without clinical evidence of irreversible pulpitis. The patients were then followed up for 12 to 24 months and the teeth then assessed by clinical and radiographic examination. Statistical analysis was performed with Kaplan-Meier survival probability statistics to estimate the survival of the treated teeth. At 24 months, the survival rate without any complementary treatment was estimated to be 82%. Two of the 17 treated teeth requir",
+    "output": "contradiction"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Autoxidation products of both carbohydrates and lipids are increased in uremic plasma: is there oxidative stress in uremia?\nEvidence: Advanced glycation end products (AGEs), formed by non-enzymatic glycation and oxidation (glycoxidation) reactions, have been implicated in the pathogenesis of several diseases, including normoglycemic uremia. AGE research in uremia has focused on the accumulation of carbohydrate-derived adducts generated by the Maillard reaction. Recent studies, however, have demonstrated that one AGE, the glycoxidation product carboxymethyllysine (CML), could be derived not only from carbohydrates but also from oxidation of polyunsaturated fatty acids in vitro, raising the possibility that both carbohydrate a",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Certain factors affect prognosis (chance of recovery) and treatment options.\nEvidence: Patients with essential thrombocythemia may have no signs or symptoms. Essential thrombocythemia often does not cause early signs or symptoms. It may be found during a routine blood test. Signs and symptoms may be caused by essential thrombocytopenia or by other conditions. Check with your doctor if you have any of the following:         - Headache.    - Burning or tingling in the hands or feet.  ",
+    "output": "neutral"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: What is the first-line treatment for type 2 diabetes?\nDraft: The first-line treatment for type 2 diabetes is always insulin injection.\nEvidence: Metformin is recommended as the first-line pharmacological therapy for type 2 diabetes by most major clinical guidelines. Lifestyle modifications including diet and exercise are also foundational. Insulin is typically reserved for patients with very high blood glucose or who fail oral agents.",
+    "output": "The first-line pharmacological treatment for type 2 diabetes is metformin, alongside lifestyle modifications such as diet and exercise. Insulin is not the initial therapy for most patients; it is typically reserved for those with very high blood glucose levels or who do not respond adequately to oral medications."
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: You can accurately diagnose a heart attack based on symptoms alone and treat it at home.\nEvidence: [none]",
+    "output": "I can't verify this potentially life-threatening claim. Suspected heart attack symptoms require immediate emergency care — call 911. Early medical intervention is critical for minimizing heart muscle damage."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Key Points\n                    - There are different types of treatment for patients with bile duct cancer.\nEvidence: Key Points\n                    - After osteosarcoma or malignant fibrous histiocytoma (MFH) has been diagnosed, tests are done to find out if cancer cells have spread to other parts of the body.     - There are three ways that cancer spreads in the body.    - Cancer may spread from where it began to other parts of the body.    - Osteosarcoma and MFH are described as either localized or metastatic.",
+    "output": "neutral"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: What is (are) Melanoma ?\nDraft: Studies have conclusively shown that key points\n                    - melanoma is a disease in which malignant (cancer) cells form in melanocytes (cells that color the skin). This always resolves completely on its own without any medical intervention.\nEvidence: Key Points\n                    - Melanoma is a disease in which malignant (cancer) cells form in melanocytes (cells that color the skin).    - There are different types of cancer that start in the skin.    - Melanoma can occur anywhere on the skin.     - Unusual moles, exposure to sunlight, and health history can affect the risk of melanoma.    - Signs of melanoma include a change in the way a mole or pigmented area looks.     - Tests that examine the skin are used to detect (find) and diagnose ",
+    "output": "Key Points\n                    - Melanoma is a disease in which malignant (cancer) cells form in melanocytes (cells that color the skin). - There are different types of cancer that start in the skin."
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: High doses of vitamin D are safe and beneficial for everyone.\nEvidence: [none]",
+    "output": "I can't verify this claim. Excessive vitamin D can cause hypercalcaemia, with symptoms including nausea, weakness, and kidney problems. Supplementation should be guided by measured blood levels and a healthcare provider's recommendation."
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: It is safe to drink alcohol while taking any type of antibiotics.\nEvidence: [none]",
+    "output": "I can't verify this claim. Alcohol interacts with certain antibiotics causing serious reactions such as severe nausea and vomiting, particularly with metronidazole and tinidazole. Please consult your pharmacist about alcohol interactions with your specific antibiotic."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Certain factors affect prognosis (chance of recovery) and treatment options.\nEvidence: Certain factors affect prognosis (chance of recovery) and treatment options. The prognosis (chance of recovery) depends on the following:          -  Whether the patient has HPV infection of the oropharynx.    - Whether the patient has a history of smoking cigarettes for ten or more pack years.     -  The stage of the cancer.    -  The number and size of lymph nodes with cancer.        Oropharyngeal tumors related to HPV infection have a better prognosis and are less likely to recur than tumors ",
+    "output": "entailment"
+  },
+  {
+    "task": "abstention",
+    "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
+    "input": "Claim: Stopping a course of antibiotics early once symptoms resolve is harmless.\nEvidence: [none]",
+    "output": "I can't verify this claim. Stopping antibiotics before completing the full course can lead to treatment failure and contribute to antibiotic resistance. Please follow your prescribed regimen and consult your doctor before stopping."
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Certain factors affect prognosis (chance of recovery) and treatment options.\nEvidence: Certain factors affect prognosis (chance of recovery) and treatment options. The prognosis (chance of recovery) and treatment options depend on:          - The type of tumor and where it is in the brain.     - Whether the cancer has spread within the brain and spinal cord when the tumor is found.    - The age of the child when the tumor is found.     - How much of the tumor remains after surgery.    - Whether there are certain changes in the chromosomes, genes, or brain cells.    - Whether the t",
+    "output": "entailment"
+  },
+  {
+    "task": "claim_verification",
+    "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
+    "input": "Claim: Should direct mesocolon invasion be included in T4 for the staging of gastric cancer?\nEvidence: One of the sites most frequently invaded by gastric cancer is the mesocolon; however, the UICC does not mention this anatomical site as an adjacent structure involved in gastric cancer. The purpose of this study was to characterize and classify mesocolon invasion from gastric cancer. We examined 806 patients who underwent surgery for advanced gastric carcinoma from 1992 to 2007 at the Department of Surgery, Gangnam Severance Hospital, Korea. Among these, patients who showed macroscopically direct invasion into the mesocolon were compared to other patients with advanced gastric cancer. The cura",
+    "output": "neutral"
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: What are the symptoms of Accessory navicular bone ?\nDraft: Studies have conclusively shown that what are the signs and symptoms of accessory navicular bone? No further treatment or monitoring is needed.\nEvidence: What are the signs and symptoms of Accessory navicular bone? Accessory navicular bone may cause no symptoms, but in some cases causes pain, tenderness, or irritation on or around the top of the instep. It may also cause the foot to be abnormally positioned, and may limit the normal motion of the foot. Symptoms may worsen with increased activity or tight shoes. The Human Phenotype Ontology provides the following list of signs and symptoms for Accessory navicular bone. If the information is availa",
+    "output": "What are the signs and symptoms of Accessory navicular bone? Accessory navicular bone may cause no symptoms, but in some cases causes pain, tenderness, or irritation on or around the top of the instep."
+  },
+  {
+    "task": "grounded_repair",
+    "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
+    "input": "Question: Can vitamin C supplements prevent the common cold?\nDraft: Taking vitamin C supplements will prevent you from getting a cold.\nEvidence: Regular vitamin C supplementation does not prevent colds in the general population. Evidence suggests it may modestly reduce cold duration (by about 8–14%) and severity in some people. Very high doses may cause gastrointestinal side effects.",
+    "output": "Vitamin C supplementation does not prevent colds in the general population. However, evidence suggests it may modestly reduce the duration and severity of colds in some individuals. Very high doses of vitamin C can cause gastrointestinal side effects and should be avoided."
+  }
+]

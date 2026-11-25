@@ -1,0 +1,79 @@
+{
+  "_meta": {
+    "adapter": "models/qwen3-1.7b-lora"
+  },
+  "baseline": {
+    "config": "baseline",
+    "n": 20,
+    "accuracy": 0.7,
+    "abstention_rate": 0.0,
+    "avg_time_s": 0.31,
+    "per_class": {
+      "maybe": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "no": {
+        "precision": 1.0,
+        "recall": 0.1667,
+        "f1": 0.2857
+      },
+      "yes": {
+        "precision": 0.6842,
+        "recall": 1.0,
+        "f1": 0.8125
+      }
+    }
+  },
+  "retrieval": {
+    "config": "retrieval",
+    "n": 20,
+    "accuracy": 0.55,
+    "abstention_rate": 0.0,
+    "avg_retrieval_score": 0.0243,
+    "avg_time_s": 0.45,
+    "per_class": {
+      "maybe": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "no": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "yes": {
+        "precision": 0.6875,
+        "recall": 0.8462,
+        "f1": 0.7586
+      }
+    }
+  },
+  "full": {
+    "config": "full",
+    "n": 20,
+    "accuracy": 0.7,
+    "abstention_rate": 0.0,
+    "avg_entailment_score": 0.0,
+    "avg_time_s": 0.28,
+    "per_class": {
+      "maybe": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "no": {
+        "precision": 1.0,
+        "recall": 0.1667,
+        "f1": 0.2857
+      },
+      "yes": {
+        "precision": 0.6842,
+        "recall": 1.0,
+        "f1": 0.8125
+      }
+    }
+  }
+}

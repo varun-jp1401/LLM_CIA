@@ -20,11 +20,12 @@ st.set_page_config(page_title="Medical Answer Verification", page_icon="🩺", l
 # ---------------------------------------------------------------------------
 
 @st.cache_resource(show_spinner="Loading Qwen3-1.7B and retrieval index …")
-def get_pipeline():
-    return MedicalPipeline()
+def get_pipeline(use_lora: bool = True):
+    adapter = "models/qwen3-1.7b-lora" if use_lora else None
+    return MedicalPipeline(adapter_path=adapter)
 
 
-@st.cache_resource(show_spinner="Building hybrid retrieval index …")
+@st.cache_resource(show_spinner="Loading hybrid retrieval index …")
 def get_retriever():
     try:
         from retrieval import HybridRetriever
@@ -41,10 +42,15 @@ def get_retriever():
 # ---------------------------------------------------------------------------
 
 st.sidebar.title("⚙️ Settings")
+use_lora = st.sidebar.checkbox(
+    "Use Fine-Tuned LoRA Adapter",
+    value=True,
+    help="Loads models/qwen3-1.7b-lora fine-tuned on verification, repair, and abstention.",
+)
 use_hybrid = st.sidebar.checkbox(
     "Hybrid retrieval (BM25 + PubMedBERT/FAISS)",
-    value=False,
-    help="Builds a dense FAISS index on first run. Requires sentence-transformers and faiss-cpu.",
+    value=True,
+    help="Uses dense FAISS index cached at data/faiss_index.pkl. Blends lexical BM25 with PubMedBERT.",
 )
 top_k = st.sidebar.slider("Retrieved passages (k)", 1, 10, 5)
 st.sidebar.markdown("---")
@@ -68,24 +74,13 @@ with tab_qa:
     question = st.text_area("Medical question", placeholder="What should someone know about …", height=100)
 
     if st.button("Generate and verify", type="primary", disabled=not question.strip()):
-        pipe = get_pipeline()
+        pipe = get_pipeline(use_lora=use_lora)
         retriever = get_retriever() if use_hybrid else None
 
         with st.spinner("Generating, retrieving evidence, and checking claims …"):
             try:
-                if retriever is not None:
-                    # Use hybrid retriever, then run verification manually
-                    evidence = retriever.retrieve(question, k=top_k)
-                    draft = pipe.generate(
-                        f"Answer this medical information question cautiously in 3-5 sentences. Say when uncertain.\nQuestion: {question}\nAnswer:"
-                    )
-                    # Inject hybrid evidence into the pipeline's run result
-                    result = pipe.run(question)
-                    result["evidence"] = evidence  # override with hybrid evidence
-                    result["retriever"] = "hybrid_rrf"
-                else:
-                    result = pipe.run(question)
-                    result["retriever"] = "bm25"
+                result = pipe.run(question, retriever=retriever)
+                result["retriever"] = "hybrid_rrf" if retriever is not None else "bm25"
 
                 # --- Final answer ---
                 st.subheader("Final response")
@@ -179,7 +174,7 @@ with tab_eval:
                 pass
 
     if run_eval and configs:
-        pipe = get_pipeline()
+        pipe = get_pipeline(use_lora=use_lora)
         retriever = get_retriever() if use_hybrid else None
         from evaluate import Evaluator
 

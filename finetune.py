@@ -1,23 +1,15 @@
 """
 LoRA / QLoRA fine-tuning script for Qwen3-1.7B.
+Updated for trl>=1.0 / transformers>=5.0 compatibility.
 
 Tasks trained together (instruction-following format):
-  1. Claim verification  — given a claim + evidence passage, output entail / neutral / contradict
+  1. Claim verification  — given a claim + evidence, output entail / neutral / contradict
   2. Grounded repair     — given an unverified draft + evidence, produce a corrected answer
   3. Abstention          — given a high-risk claim with no evidence, output the abstention string
 
-Training data:
-  - If 'data/finetune_examples.json' exists, it is loaded directly.
-  - Otherwise a small synthetic seed set is created and saved so the script is
-    runnable immediately.  Run once to generate the file, then augment it with
-    real examples before a production run.
-
 Usage:
-    python finetune.py --epochs 2 --batch-size 4 --lora-r 16
-    python finetune.py --dry-run   # validate data only, no GPU needed
-
-The adapter is saved to 'models/qwen3-1.7b-lora/'.
-Merge it back with:
+    python finetune.py --dry-run                        # validate data only, no GPU needed
+    python finetune.py --epochs 3 --batch-size 2 --lora-r 16
     python finetune.py --merge --adapter models/qwen3-1.7b-lora
 """
 from __future__ import annotations
@@ -27,17 +19,16 @@ import json
 import sys
 from pathlib import Path
 
-DATA_FILE = Path(__file__).parent / "data" / "finetune_examples.json"
+DATA_FILE   = Path(__file__).parent / "data" / "finetune_examples.json"
 ADAPTER_DIR = Path(__file__).parent / "models" / "qwen3-1.7b-lora"
-BASE_MODEL = "Qwen/Qwen3-1.7B"
+BASE_MODEL  = "Qwen/Qwen3-1.7B"
 
 
 # ---------------------------------------------------------------------------
-# Synthetic seed data
+# Seed data (fallback if finetune_examples.json is missing)
 # ---------------------------------------------------------------------------
 
 SEED_EXAMPLES = [
-    # --- Claim verification ---
     {
         "task": "claim_verification",
         "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
@@ -51,63 +42,23 @@ SEED_EXAMPLES = [
         "output": "contradiction",
     },
     {
-        "task": "claim_verification",
-        "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
-        "input": "Claim: Vitamin C can cure the common cold.\nEvidence: Regular supplementation with vitamin C does not prevent colds in the general population but may modestly reduce their duration.",
-        "output": "contradiction",
-    },
-    {
-        "task": "claim_verification",
-        "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
-        "input": "Claim: Exercise improves cardiovascular health.\nEvidence: Aerobic exercise is associated with improved cardiovascular outcomes, reduced blood pressure, and lower risk of heart disease.",
-        "output": "entailment",
-    },
-    {
-        "task": "claim_verification",
-        "instruction": "Classify whether the evidence supports, is neutral to, or contradicts the claim. Reply with one word: entailment, neutral, or contradiction.",
-        "input": "Claim: Blood type determines personality.\nEvidence: There is no scientific evidence linking ABO blood type to personality traits.",
-        "output": "contradiction",
-    },
-    # --- Grounded repair ---
-    {
         "task": "grounded_repair",
         "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
         "input": "Question: What is the first-line treatment for hypertension?\nDraft: The first-line treatment for hypertension is typically a beta-blocker.\nEvidence: Current guidelines recommend thiazide diuretics, ACE inhibitors, ARBs, or calcium channel blockers as first-line antihypertensive agents; beta-blockers are generally second-line.",
         "output": "Current clinical guidelines recommend thiazide diuretics, ACE inhibitors, ARBs, or calcium channel blockers as first-line antihypertensive agents. Beta-blockers are typically considered second-line therapy.",
     },
     {
-        "task": "grounded_repair",
-        "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
-        "input": "Question: Is the keto diet safe for people with type 1 diabetes?\nDraft: The keto diet is completely safe for type 1 diabetes and helps control blood sugar.\nEvidence: Very-low-carbohydrate diets in type 1 diabetes require careful medical supervision due to risks of hypoglycaemia and diabetic ketoacidosis; they are not universally recommended.",
-        "output": "Very-low-carbohydrate (ketogenic) diets in type 1 diabetes carry risks including hypoglycaemia and diabetic ketoacidosis and require careful medical supervision. They are not universally recommended and should not be started without consulting a healthcare provider.",
-    },
-    {
-        "task": "grounded_repair",
-        "instruction": "Revise the draft answer to be accurate and grounded in the evidence. Keep the response concise and cite the evidence.",
-        "input": "Question: Does coffee cause cancer?\nDraft: Coffee definitely causes cancer.\nEvidence: The World Health Organization removed coffee from its list of possible carcinogens in 2016; some evidence suggests coffee may reduce risk of certain cancers.",
-        "output": "According to available evidence, coffee is not classified as a carcinogen; the WHO removed it from its list of possible carcinogens. Some studies suggest regular coffee consumption may be associated with a reduced risk of certain cancers.",
-    },
-    # --- Abstention ---
-    {
         "task": "abstention",
         "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
         "input": "Claim: You should double your prescribed dose of warfarin if your symptoms worsen.\nEvidence: [none]",
         "output": "I can't verify this potentially high-risk medication claim against available evidence. Please consult a qualified healthcare professional before changing any prescribed medication dose.",
     },
-    {
-        "task": "abstention",
-        "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
-        "input": "Claim: Stopping antibiotics early when you feel better is safe.\nEvidence: [none]",
-        "output": "I can't verify this claim against available evidence. Stopping antibiotics early can contribute to antibiotic resistance and treatment failure. Please consult a healthcare professional about your specific antibiotic course.",
-    },
-    {
-        "task": "abstention",
-        "instruction": "Decide whether to answer or abstain. If the claim involves high-risk medication or diagnosis advice and there is no supporting evidence, output the abstention message.",
-        "input": "Claim: Taking acetaminophen and ibuprofen together is always safe.\nEvidence: [none]",
-        "output": "I can't verify this claim against the available evidence. Combining acetaminophen and ibuprofen can be safe in some circumstances but requires careful attention to dosages and individual health conditions. Please consult a pharmacist or healthcare provider.",
-    },
 ]
 
+
+# ---------------------------------------------------------------------------
+# Prompt builder
+# ---------------------------------------------------------------------------
 
 def _build_prompt(ex: dict) -> str:
     return (
@@ -135,30 +86,115 @@ def _ensure_data() -> list[dict]:
 # Training
 # ---------------------------------------------------------------------------
 
+def _make_response_collator(tokenizer, response_template: str = "### Response\n"):
+    """
+    Build a data collator that only computes loss on the response portion of each
+    prompt, masking out instruction + input tokens.
+
+    Tries trl's built-in class first (available up to trl ~0.9), then falls back
+    to a minimal custom implementation compatible with trl 1.x.
+    """
+    # --- try built-in (trl <= 0.9) ---
+    for import_path in [
+        ("trl", "DataCollatorForCompletionOnlyLM"),
+        ("trl.trainer.utils", "DataCollatorForCompletionOnlyLM"),
+    ]:
+        try:
+            mod = __import__(import_path[0], fromlist=[import_path[1]])
+            cls = getattr(mod, import_path[1])
+            ids = tokenizer.encode(response_template, add_special_tokens=False)
+            print(f"[finetune] Using {import_path[0]}.{import_path[1]} collator.")
+            return cls(ids, tokenizer=tokenizer)
+        except (ImportError, AttributeError):
+            continue
+
+    # --- custom fallback for trl >= 1.0 ---
+    print("[finetune] DataCollatorForCompletionOnlyLM not found in trl; using custom response-only collator.")
+    import torch
+    from transformers import DataCollatorForSeq2Seq
+
+    response_ids = tokenizer.encode(response_template, add_special_tokens=False)
+
+    class _ResponseOnlyCollator:
+        """Tokenize full prompts and mask everything before '### Response\\n'."""
+        def __init__(self, tokenizer, max_length: int = 512):
+            self.tokenizer = tokenizer
+            self.max_length = max_length
+
+        def __call__(self, features):
+            texts   = [f["text"] if isinstance(f, dict) else f for f in features]
+            encoded = self.tokenizer(
+                texts,
+                padding=True,
+                truncation=True,
+                max_length=self.max_length,
+                return_tensors="pt",
+            )
+            input_ids = encoded["input_ids"]
+            labels    = input_ids.clone()
+
+            # Mask tokens that come before the response template
+            tmpl_len = len(response_ids)
+            for i, row in enumerate(input_ids):
+                row_list = row.tolist()
+                # Find last occurrence of the response template token sequence
+                found = -1
+                for j in range(len(row_list) - tmpl_len, -1, -1):
+                    if row_list[j: j + tmpl_len] == response_ids:
+                        found = j
+                        break
+                if found != -1:
+                    labels[i, : found + tmpl_len] = -100  # mask instruction + template
+                else:
+                    labels[i, :] = -100  # template not found — mask everything
+
+            # Mask padding tokens
+            labels[labels == self.tokenizer.pad_token_id] = -100
+            encoded["labels"] = labels
+            return encoded
+
+    return _ResponseOnlyCollator(tokenizer)
+
+
 def train(args):
+    # --- imports ---
     try:
         import torch
-        from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments
+        from transformers import AutoTokenizer, AutoModelForCausalLM
         from peft import LoraConfig, get_peft_model, TaskType
-        from trl import SFTTrainer, DataCollatorForCompletionOnlyLM
         from datasets import Dataset
     except ImportError as e:
-        print(f"[finetune] Required package missing: {e}\nInstall with: pip install peft trl datasets")
+        print(f"[finetune] Required package missing: {e}")
         sys.exit(1)
 
+    try:
+        from trl import SFTTrainer, SFTConfig
+        USE_SFTCONFIG = True
+    except ImportError:
+        from trl import SFTTrainer
+        USE_SFTCONFIG = False
+
+    # --- data ---
     examples = _ensure_data()
+    if len(examples) < 4:
+        print("[finetune] WARNING: very few training examples. Run generate_finetune_data.py first.")
     texts = [_build_prompt(ex) for ex in examples]
 
     dataset = Dataset.from_dict({"text": texts})
-    # Simple 90/10 train/val split
-    split = dataset.train_test_split(test_size=0.1, seed=42)
+    test_size = max(1, int(len(texts) * 0.1)) / len(texts)
+    split = dataset.train_test_split(test_size=test_size, seed=42)
+    print(f"[finetune] Train: {len(split['train'])}  Eval: {len(split['test'])}")
 
+    # --- model ---
     print(f"[finetune] Loading base model: {BASE_MODEL}")
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
     dtype = torch.float16 if torch.cuda.is_available() else torch.float32
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"[finetune] Device: {device}  dtype: {dtype}")
+
     model = AutoModelForCausalLM.from_pretrained(
         BASE_MODEL,
         torch_dtype=dtype,
@@ -166,11 +202,13 @@ def train(args):
     )
     model.enable_input_require_grads()
 
+    # --- LoRA ---
     lora_config = LoraConfig(
         task_type=TaskType.CAUSAL_LM,
         r=args.lora_r,
         lora_alpha=args.lora_r * 2,
-        target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+        target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
+                        "gate_proj", "up_proj", "down_proj"],
         lora_dropout=0.05,
         bias="none",
     )
@@ -178,36 +216,56 @@ def train(args):
     model.print_trainable_parameters()
 
     ADAPTER_DIR.mkdir(parents=True, exist_ok=True)
-    training_args = TrainingArguments(
+
+    # --- response-only collator (works with any trl version) ---
+    collator = _make_response_collator(tokenizer)
+
+    # --- training args ---
+    common_kwargs = dict(
         output_dir=str(ADAPTER_DIR),
         num_train_epochs=args.epochs,
         per_device_train_batch_size=args.batch_size,
         per_device_eval_batch_size=args.batch_size,
         gradient_accumulation_steps=max(1, 8 // args.batch_size),
-        warmup_ratio=0.1,
+        warmup_steps=5,
         learning_rate=2e-4,
         fp16=torch.cuda.is_available(),
         logging_steps=5,
-        evaluation_strategy="epoch",
+        eval_strategy="epoch",
         save_strategy="epoch",
         load_best_model_at_end=True,
+        metric_for_best_model="eval_loss",
+        greater_is_better=False,
         report_to="none",
         dataloader_num_workers=0,
+        save_total_limit=2,
     )
 
-    response_template = "### Response\n"
-    collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=tokenizer)
-
-    trainer = SFTTrainer(
-        model=model,
-        tokenizer=tokenizer,
-        train_dataset=split["train"],
-        eval_dataset=split["test"],
-        dataset_text_field="text",
-        max_seq_length=512,
-        data_collator=collator,
-        args=training_args,
-    )
+    if USE_SFTCONFIG:
+        training_args = SFTConfig(
+            **common_kwargs,
+            max_length=512,
+            dataset_text_field="text",
+        )
+        trainer = SFTTrainer(
+            model=model,
+            processing_class=tokenizer,
+            train_dataset=split["train"],
+            eval_dataset=split["test"],
+            args=training_args,
+        )
+    else:
+        from transformers import TrainingArguments
+        training_args = TrainingArguments(**common_kwargs)
+        trainer = SFTTrainer(
+            model=model,
+            tokenizer=tokenizer,
+            train_dataset=split["train"],
+            eval_dataset=split["test"],
+            dataset_text_field="text",
+            max_seq_length=512,
+            args=training_args,
+        )
 
     print("[finetune] Starting training …")
     trainer.train()
@@ -215,6 +273,10 @@ def train(args):
     tokenizer.save_pretrained(str(ADAPTER_DIR))
     print(f"[finetune] Adapter saved to {ADAPTER_DIR}")
 
+
+# ---------------------------------------------------------------------------
+# Merge
+# ---------------------------------------------------------------------------
 
 def merge(adapter_path: str):
     """Merge LoRA adapter into base model and save as full model."""
@@ -237,6 +299,10 @@ def merge(adapter_path: str):
     print(f"[finetune] Merged model saved to {out_dir}")
 
 
+# ---------------------------------------------------------------------------
+# Dry run
+# ---------------------------------------------------------------------------
+
 def dry_run():
     examples = _ensure_data()
     print(f"\n[finetune] Dry run: {len(examples)} examples. Sample prompts:")
@@ -251,13 +317,15 @@ def dry_run():
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="LoRA fine-tune Qwen3-1.7B for medical claim verification")
-    parser.add_argument("--epochs", type=int, default=3)
+    parser = argparse.ArgumentParser(
+        description="LoRA fine-tune Qwen3-1.7B for medical claim verification"
+    )
+    parser.add_argument("--epochs",     type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=2)
-    parser.add_argument("--lora-r", type=int, default=16, help="LoRA rank (default 16)")
-    parser.add_argument("--dry-run", action="store_true", help="Validate data only, no model loading")
-    parser.add_argument("--merge", action="store_true", help="Merge LoRA adapter into base model")
-    parser.add_argument("--adapter", default=str(ADAPTER_DIR), help="Path to LoRA adapter for --merge")
+    parser.add_argument("--lora-r",     type=int, default=16, help="LoRA rank (default 16)")
+    parser.add_argument("--dry-run",    action="store_true", help="Validate data only, no model loading")
+    parser.add_argument("--merge",      action="store_true", help="Merge LoRA adapter into base model")
+    parser.add_argument("--adapter",    default=str(ADAPTER_DIR), help="Path to LoRA adapter for --merge")
     args = parser.parse_args()
 
     if args.dry_run:

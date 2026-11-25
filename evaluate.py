@@ -108,13 +108,36 @@ _MAYBE_PATTERNS = re.compile(r"\b(maybe|uncertain|unclear|limited|mixed|inconclu
 
 def extract_label(text: str) -> str:
     """Heuristically map a free-text answer to yes / no / maybe."""
-    if not text or "abstain" in text.lower():
+    if not text or "i can’t verify" in text.lower() or "i can't verify" in text.lower():
         return "abstain"
-    t = text.lower()
+
+    # Strip safety disclaimer footer so words like 'did not' don't corrupt the answer
+    clean_text = text.split("Evidence check:", 1)[0].strip()
+
+    # 1. Check opening word / first line directly (e.g. "Yes, ...", "No, ...", "Maybe, ...")
+    first_chunk = clean_text[:120].strip()
+    first_match = re.search(r"^\s*(yes|no|maybe)\b", first_chunk, re.IGNORECASE)
+    if first_match:
+        return first_match.group(1).lower()
+
+    # 2. Check if yes, no, or maybe appears in the first sentence
+    first_sent = clean_text.split(".", 1)[0].lower()
+    first_yes = len(re.findall(r"\byes\b", first_sent))
+    first_no = len(re.findall(r"\bno\b", first_sent))
+    first_maybe = len(re.findall(r"\b(maybe|uncertain|unclear)\b", first_sent))
+    if first_yes > first_no and first_yes >= first_maybe:
+        return "yes"
+    if first_no > first_yes and first_no >= first_maybe:
+        return "no"
+    if first_maybe > first_yes and first_maybe > first_no:
+        return "maybe"
+
+    # 3. Overall pattern count on clean answer body
+    t = clean_text.lower()
     yes = len(_YES_PATTERNS.findall(t))
     no = len(_NO_PATTERNS.findall(t))
     maybe = len(_MAYBE_PATTERNS.findall(t))
-    if maybe >= max(yes, no):
+    if maybe >= max(yes, no) and maybe > 0:
         return "maybe"
     if yes > no:
         return "yes"
@@ -147,14 +170,18 @@ class Evaluator:
     # -- Configuration 1: baseline Qwen only --
     def run_baseline(self) -> dict:
         preds, golds, times = [], [], []
-        for s in self.samples:
+        total = len(self.samples)
+        for i, s in enumerate(self.samples, 1):
             t0 = time.time()
             answer = self.pipeline.generate(
                 f"Answer this biomedical yes/no/maybe question with one word (yes, no, or maybe) followed by a brief explanation.\nQuestion: {s['question']}\nAnswer:"
             )
-            times.append(time.time() - t0)
-            preds.append(extract_label(answer))
+            elapsed = time.time() - t0
+            times.append(elapsed)
+            pred = extract_label(answer)
+            preds.append(pred)
             golds.append(s["gold_label"])
+            print(f"  [baseline {i}/{total}] {elapsed:.2f}s | pred={pred} gold={s['gold_label']}", flush=True)
         return {
             "config": "baseline",
             "n": len(self.samples),
@@ -168,22 +195,26 @@ class Evaluator:
     def run_retrieval(self) -> dict:
         preds, golds, times, retrieval_scores = [], [], [], []
         retriever = self.retriever or getattr(self.pipeline, "_bm25_retriever", None)
-        for s in self.samples:
+        total = len(self.samples)
+        for i, s in enumerate(self.samples, 1):
             t0 = time.time()
             if retriever:
                 evidence = retriever.retrieve(s["question"], k=3)
                 retrieval_scores.append(evidence[0]["score"] if evidence else 0.0)
-                ctx = "\n\n".join(f"[{i+1}] {e['text'][:400]}" for i, e in enumerate(evidence))
+                ctx = "\n\n".join(f"[{j+1}] {e['text'][:400]}" for j, e in enumerate(evidence))
             else:
                 evidence = self.pipeline.retrieve(s["question"], k=3)
                 retrieval_scores.append(evidence[0]["score"] if evidence else 0.0)
-                ctx = "\n\n".join(f"[{i+1}] {e['text'][:400]}" for i, e in enumerate(evidence))
+                ctx = "\n\n".join(f"[{j+1}] {e['text'][:400]}" for j, e in enumerate(evidence))
             answer = self.pipeline.generate(
                 f"Using the evidence below, answer yes, no, or maybe and briefly explain.\nQuestion: {s['question']}\nEvidence:\n{ctx}\nAnswer:"
             )
-            times.append(time.time() - t0)
-            preds.append(extract_label(answer))
+            elapsed = time.time() - t0
+            times.append(elapsed)
+            pred = extract_label(answer)
+            preds.append(pred)
             golds.append(s["gold_label"])
+            print(f"  [retrieval {i}/{total}] {elapsed:.2f}s | pred={pred} gold={s['gold_label']}", flush=True)
         return {
             "config": "retrieval",
             "n": len(self.samples),
@@ -197,17 +228,21 @@ class Evaluator:
     # -- Configuration 3: full pipeline --
     def run_full(self) -> dict:
         preds, golds, times, entail_scores, abstains = [], [], [], [], []
-        for s in self.samples:
+        total = len(self.samples)
+        for i, s in enumerate(self.samples, 1):
             t0 = time.time()
-            result = self.pipeline.run(s["question"])
-            times.append(time.time() - t0)
-            preds.append("abstain" if result["abstained"] else extract_label(result["answer"]))
+            result = self.pipeline.run(s["question"], retriever=self.retriever, is_qa_choice=True)
+            elapsed = time.time() - t0
+            times.append(elapsed)
+            pred = "abstain" if result["abstained"] else extract_label(result["answer"])
+            preds.append(pred)
             golds.append(s["gold_label"])
             abstains.append(result["abstained"])
             if result["claims"]:
                 entail_scores.append(
                     sum(c["confidence"] for c in result["claims"]) / len(result["claims"])
                 )
+            print(f"  [full {i}/{total}] {elapsed:.2f}s | pred={pred} gold={s['gold_label']} abstained={result['abstained']}", flush=True)
         return {
             "config": "full",
             "n": len(self.samples),
@@ -246,11 +281,15 @@ if __name__ == "__main__":
     parser.add_argument("--n", type=int, default=20, help="Number of evaluation samples (default 20)")
     parser.add_argument("--out", default="results/eval_results.json", help="Output JSON path")
     parser.add_argument("--use-hybrid", action="store_true", help="Use HybridRetriever instead of BM25 only")
+    parser.add_argument("--adapter", default=None,
+                        help="Path to LoRA adapter to load into the pipeline (fine-tuned model)")
     args = parser.parse_args()
 
     print("[evaluate] Loading pipeline …")
     from pipeline import MedicalPipeline
-    pipe = MedicalPipeline()
+    pipe = MedicalPipeline(adapter_path=args.adapter)
+    if args.adapter:
+        print(f"[evaluate] Using fine-tuned model with adapter: {args.adapter}")
 
     retriever = None
     if args.use_hybrid:
@@ -263,6 +302,10 @@ if __name__ == "__main__":
 
     evaluator = Evaluator(pipe, retriever=retriever, max_samples=args.n)
     all_results = {}
+
+    # Tag results with whether a fine-tuned adapter was used
+    if args.adapter:
+        all_results["_meta"] = {"adapter": args.adapter}
 
     for cfg in args.configs:
         print(f"\n[evaluate] Running configuration: {cfg} …")

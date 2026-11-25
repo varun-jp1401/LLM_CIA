@@ -109,31 +109,38 @@ def load_pubmedqa() -> list[dict]:
 class BM25Retriever:
     def __init__(self, docs: list[dict]):
         self.docs = docs
-        # Pre-compute doc term sets for speed
+        # Pre-compute doc term sets and question terms once for speed
         self._doc_terms = [_terms(d["text"]) for d in docs]
+        self._src_q_terms = [_terms(d["text"].split("\nAnswer:", 1)[0]) for d in docs]
+        self._doc_lengths = [len(dt) for dt in self._doc_terms]
         self._n = max(1, len(docs))
 
     def retrieve(self, query: str, k: int = 5) -> list[dict]:
         q_terms = _terms(query)
         if not q_terms or not self.docs:
             return []
+        generic_tokens = {
+            "what", "are", "is", "the", "common", "can", "how", "does",
+            "do", "help", "reduce", "risk", "of", "for", "and", "or", "with",
+        }
+        entity_terms = q_terms - generic_tokens
+        num_q = max(1, len(q_terms))
+        num_ent = max(1, len(entity_terms))
+
         dfs = {t: sum(1 for dt in self._doc_terms if t in dt) for t in q_terms}
         ranked = []
-        for doc, dt in zip(self.docs, self._doc_terms):
+        for doc, dt, src_q_terms, d_len in zip(self.docs, self._doc_terms, self._src_q_terms, self._doc_lengths):
+            matches = q_terms & dt
+            if not matches:
+                continue
             score = sum(
                 math.log(1 + (self._n - dfs[t] + 0.5) / (dfs[t] + 0.5))
-                for t in q_terms if t in dt
+                for t in matches
             )
-            score /= 1 - 0.75 + 0.75 * len(dt) / 120
+            score /= 1 - 0.75 + 0.75 * d_len / 120
             # Question-match bonus
-            src_q = doc["text"].split("\nAnswer:", 1)[0].lower()
-            src_q_terms = _terms(src_q)
-            score += 4.0 * len(q_terms & src_q_terms) / max(1, len(q_terms))
-            entity_terms = q_terms - {
-                "what", "are", "is", "the", "common", "can", "how", "does",
-                "do", "help", "reduce", "risk", "of", "for", "and", "or", "with",
-            }
-            score += 18.0 * len(entity_terms & src_q_terms) / max(1, len(entity_terms))
+            score += 4.0 * len(q_terms & src_q_terms) / num_q
+            score += 18.0 * len(entity_terms & src_q_terms) / num_ent
             if score:
                 ranked.append((score, doc))
         return [
