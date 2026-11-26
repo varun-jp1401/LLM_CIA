@@ -1,0 +1,7 @@
+model,test_set,n,accuracy,macro_precision,macro_recall,macro_f1
+"Fine-tuned","MedQuAD held-out topics",900,0.99,0.9901,0.99,0.99
+"Fine-tuned","MedQuAD held-out topics + unseen edit types",900,0.9433,0.9506,0.9433,0.943
+"Fine-tuned","HealthVer (real claims)",840,0.7655,0.7612,0.7601,0.7605
+"Base (zero-shot)","MedQuAD held-out topics",900,0.5778,0.5979,0.5778,0.5725
+"Base (zero-shot)","MedQuAD held-out topics + unseen edit types",900,0.5067,0.5221,0.5067,0.5106
+"Base (zero-shot)","HealthVer (real claims)",840,0.3452,0.5184,0.3995,0.3234

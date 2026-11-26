@@ -1,0 +1,12 @@
+\begin{tabular}{llrrrrr}
+\toprule
+Model & Test set & $n$ & Acc. & Macro-P & Macro-R & Macro-F1 \\
+\midrule
+Fine-tuned & MedQuAD held-out topics & 900 & 0.990 & 0.990 & 0.990 & 0.990 \\
+Fine-tuned & MedQuAD held-out topics + unseen edit types & 900 & 0.943 & 0.951 & 0.943 & 0.943 \\
+Fine-tuned & HealthVer (real claims) & 840 & 0.765 & 0.761 & 0.760 & 0.760 \\
+Base (zero-shot) & MedQuAD held-out topics & 900 & 0.578 & 0.598 & 0.578 & 0.573 \\
+Base (zero-shot) & MedQuAD held-out topics + unseen edit types & 900 & 0.507 & 0.522 & 0.507 & 0.511 \\
+Base (zero-shot) & HealthVer (real claims) & 840 & 0.345 & 0.518 & 0.400 & 0.323 \\
+\bottomrule
+\end{tabular}

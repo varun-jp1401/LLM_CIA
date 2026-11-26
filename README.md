@@ -55,19 +55,32 @@ A research prototype for studying how a language model can answer medical inform
 ## Repository layout
 
 ```text
-app.py                     Streamlit interface (4 tabs: Q&A, Evaluation, Fine-tuning, About)
-pipeline.py                Qwen generation, MedQuAD retrieval, NLI checks, repair/abstention
-retrieval.py               Hybrid BM25 + PubMedBERT/FAISS retrieval with RRF fusion (new)
-evaluate.py                Three-way PubMedQA evaluation: baseline / retrieval / full (new)
-finetune.py                LoRA fine-tuning script for Qwen3-1.7B (new)
-download_data.py           Downloads MedQuAD and PubMedQA from GitHub (new)
-requirements.txt           Python packages (updated with faiss-cpu, sentence-transformers, peft, trl, etc.)
-data/MedQuAD/              MedQuAD dataset (run download_data.py to populate)
-data/PubMedQA/             PubMedQA dataset (run download_data.py to populate)
-data/finetune_examples.json  Seed fine-tuning examples (11 examples, auto-generated)
-results/                   Evaluation output JSONs (created by evaluate.py)
-models/                    LoRA adapter checkpoints (created by finetune.py)
-LLM_CIA_1.pptx             Project proposal and implementation plan
+src/                       All Python source (run from the repo root, e.g. python src/evaluate.py)
+  app.py                     Streamlit interface (Q&A, Evaluation, Fine-tuning, About)
+  pipeline.py                Qwen generation, MedQuAD retrieval, NLI checks, repair/abstention
+  retrieval.py               Hybrid BM25 + PubMedBERT/FAISS retrieval with RRF fusion
+  build_index.py             Builds the cached dense index
+  download_data.py           Downloads MedQuAD and PubMedQA
+  evaluate.py                Three-way PubMedQA evaluation: baseline / retrieval / full
+  finetune.py                LoRA fine-tuning for Qwen3-1.7B (PubMedQA)
+  generate_finetune_data.py  Builds the curated fine-tuning examples
+  claim_common.py            Shared helpers for the claim-verification work
+  build_claim_dataset.py     Builds the synthetic claim-verification dataset from MedQuAD
+  train_claim_verifier.py    Trains the claim-verification LoRA adapter
+  train_encoder_baseline.py  DeBERTa baseline    nli_baseline.py  NLI baseline
+  claim_verifier.py          Inference-time claim checking (used by app.py)
+  evaluate_claims.py         Claim-verification evaluation
+  dump_predictions.py        Dumps model predictions    dump_fewshot.py  Few-shot predictions
+  analysis*.py               Post-hoc analysis (calibration, extra metrics)
+  make_figures.py            Result figures -> figures/
+  pipeline_demo.py           Small end-to-end demo
+scripts/                   Shell scripts for the ablation / seed runs (run from anywhere)
+data/  models/  results/   Datasets, adapters, evaluation JSONs (git-ignored where large)
+figures/                   Generated figures and result tables
+paper/                     IEEE paper (docx/pdf), paper figures, data and script snapshots
+paper_work/                Paper build tooling (build_paper.py, refs, templates, scratch renders)
+docs/                      Project proposal deck (LLM_CIA_1.pptx) and conference template
+requirements.txt           Python dependencies
 ```
 
 ## Setup on Windows
@@ -91,7 +104,7 @@ python -m pip install -r requirements.txt
 ### Download datasets
 
 ```powershell
-python download_data.py
+python src/download_data.py
 ```
 
 ### Download model weights (once)
@@ -103,26 +116,29 @@ python -c "from transformers import AutoTokenizer, AutoModelForCausalLM, AutoMod
 ### Run the app
 
 ```powershell
-python -m streamlit run app.py
+python -m streamlit run src/app.py
 ```
 
 ### Run evaluation (after downloading PubMedQA)
 
 ```powershell
-python evaluate.py --configs baseline retrieval full --n 50
+python src/evaluate.py --configs baseline retrieval full --n 50
 ```
 
 ### LoRA fine-tuning
 
 ```powershell
-# CPU dry-run (no GPU needed)
-python finetune.py --dry-run
+# Build and audit deterministic 75/10/15 question-disjoint partitions (no model/GPU needed)
+python src/finetune.py --dry-run --seed 42
 
-# Full training (GPU required, ≥ 6 GB VRAM)
-python finetune.py --epochs 3 --batch-size 2 --lora-r 16
+# Train with all PubMedQA train rows, balanced class sampling, and 250 MedQuAD rows
+python src/finetune.py --epochs 3 --batch-size 2 --lora-r 16 --seed 42 --output-dir models/qwen3-1.7b-lora-pubmedqa-balanced
+
+# After training, evaluate the untouched PubMedQA test partition
+python src/evaluate.py --configs baseline --n 0 --held-out-split test --adapter models/qwen3-1.7b-lora-pubmedqa-balanced --compare-base --out results/eval_pubmedqa_balanced_test.json
 
 # Merge adapter (optional)
-python finetune.py --merge --adapter models/qwen3-1.7b-lora
+python src/finetune.py --merge --adapter models/qwen3-1.7b-lora-pubmedqa-balanced
 ```
 
 ## How the prototype behaves
@@ -143,26 +159,21 @@ These are prototype heuristics. `potentially_supported` is not proof that a clai
 
 ## Research Paper & Evaluation Metrics
 
-This section details the experimental setup, empirical benchmark results, and methodology to facilitate writing the research paper and presenting the project.
+This section records the prompt-matched PubMedQA evaluation for the balanced fine-tuning run. The 152-item test split was not used for training, checkpoint selection, or calibration.
 
 ### 1. Benchmark Results on PubMedQA
 
-The evaluation was conducted on labeled biomedical questions from PubMedQA comparing three pipeline tiers using the fine-tuned Qwen3-1.7B model:
+The fine-tuned model was selected by validation macro F1 (epoch 2, 0.507). A modest `maybe` log-score offset (+0.2) was selected on validation. Test results for the calibrated adapter and uncalibrated base model were:
 
-| Metric | 1. Baseline (Direct Qwen) | 2. Retrieval (Hybrid RRF) | 3. Full Pipeline (+ NLI & Safety) |
-|---|---|---|---|
-| **Overall Accuracy** | **70.0%** | **55.0%** | **70.0%** |
-| **Abstention Rate** | 0.0% | 0.0% | 0.0% |
-| **Yes: Precision / Recall / F1** | 0.684 / 1.000 / **0.813** | 0.688 / 0.846 / **0.759** | 0.684 / 1.000 / **0.813** |
-| **No: Precision / Recall / F1** | 1.000 / 0.167 / **0.286** | 0.000 / 0.000 / 0.000 | 1.000 / 0.167 / **0.286** |
-| **Maybe: Precision / Recall / F1** | 0.000 / 0.000 / 0.000 | 0.000 / 0.000 / 0.000 | 0.000 / 0.000 / 0.000 |
-| **Avg Retrieval Score (RRF)** | N/A | **0.0243** | **0.0243** |
-| **Average Latency / Sample** | **0.31s** | **0.45s** | **0.28s** |
+| Metric | Fine-tuned adapter | Base model |
+|---|---|---|
+| Test accuracy | 48.68% | 46.05% |
+| Test macro F1 | 0.396 | 0.359 |
+| Yes precision / recall | 0.723 / 0.410 | 0.629 / 0.675 |
+| No precision / recall | 0.534 / 0.750 | 0.667 / 0.154 |
+| Maybe precision / recall | 0.031 / 0.059 | 0.118 / 0.353 |
 
-#### Key Analytical Insights for the Paper:
-1. **Uncalibrated Baseline Overconfidence**: Baseline Qwen guesses "Yes" on almost all questions (Recall = 0.952). While this yields high nominal accuracy on binary datasets biased toward positive findings, it fails clinically when evidence is absent or nuanced.
-2. **Grounded Retrieval Stability**: Configuration 2 (Retrieval) conditions generation strictly on retrieved MedQuAD + PubMedQA context, moderating ungrounded guesses and stabilizing F1 to 0.783.
-3. **Safety-First Conservative Abstention & Hedging**: Configuration 3 (Full Pipeline) enforces claim-level DeBERTa NLI cross-checking. When academic PubMedQA claims cannot be 100% verified against consumer NIH MedQuAD passages, the pipeline refuses to make bold binary assertions. It outputs cautious, evidence-bounded disclaimers and explicitly abstains on high-risk medical statements (6.67% abstention rate).
+The yes-only collapse is reduced, but performance remains far below the requested 90% precision and recall. The maybe class remains especially weak. These results do not establish clinical accuracy or safety. Older benchmark figures in project materials are historical and are not reproduced by this run.
 
 ---
 
@@ -201,28 +212,28 @@ conda activate llm
 
 #### Step B: Build/Verify the FAISS Vector Index (One-Time)
 ```powershell
-python build_index.py --max-docs 15000 --batch-size 128
+python src/build_index.py --max-docs 15000 --batch-size 128
 ```
 *Generates and caches `data/faiss_index.pkl` (66.8 MB) using `pritamdeka/S-PubMedBert-MS-MARCO` embeddings.*
 
 #### Step C: Generate Training Data & Run LoRA Fine-Tuning
 ```powershell
-# 1. Generate 101 domain-specific examples across verification, repair, and abstention
-python generate_finetune_data.py
+# 1. Create seeded 75/10/15 question-disjoint partitions from both source folders
+python src/finetune.py --dry-run --seed 42
 
-# 2. Run fine-tuning on GPU (saves adapter to models/qwen3-1.7b-lora/)
-python finetune.py --epochs 3 --batch-size 2 --lora-r 16
+# 2. Use all PubMedQA training rows with balanced class sampling; add 250 MedQuAD rows
+python src/finetune.py --epochs 3 --batch-size 2 --lora-r 16 --seed 42 --output-dir models/qwen3-1.7b-lora-pubmedqa-balanced
 ```
 
 #### Step D: Run 3-Way Benchmark Evaluation
 ```powershell
-python evaluate.py --configs baseline retrieval full --n 50 --use-hybrid --adapter models/qwen3-1.7b-lora --out results/eval_results.json
+python src/evaluate.py --configs baseline --n 0 --held-out-split test --adapter models/qwen3-1.7b-lora-pubmedqa-balanced --compare-base --out results/eval_pubmedqa_balanced_test.json
 ```
-*Evaluates baseline vs. retrieval vs. full pipeline on PubMedQA and saves structured JSON metrics.*
+*The training script writes full question-disjoint train, validation, and test partitions to `data/finetune_splits/`. PubMedQA validation selects checkpoints; the test partition is not used for training, checkpoint selection, or calibration. The evaluator restricts decisions to yes/no/maybe and excludes PubMedQA from retrieval.*
 
 #### Step E: Launch the Streamlit Demonstration Application
 ```powershell
-streamlit run app.py
+streamlit run src/app.py
 ```
 *Opens interactive web UI with toggles for the Fine-Tuned LoRA adapter, BM25 vs. Hybrid RRF retrieval, claim entailment confidence scores, and retrieved evidence viewer.*
 
